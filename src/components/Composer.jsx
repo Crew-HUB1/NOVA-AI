@@ -4,6 +4,7 @@ export default function Composer({
   input,
   busy,
   puterReady,
+  signedIn,
   onInput,
   onSend,
   onStop,
@@ -27,6 +28,11 @@ export default function Composer({
     }
   }
 
+  let placeholder = 'Loading Puter\u2026'
+  if (puterReady) {
+    placeholder = signedIn ? 'Type a message\u2026' : 'Sign in to start chatting\u2026'
+  }
+
   return (
     <form
       className="composer"
@@ -42,7 +48,7 @@ export default function Composer({
         value={input}
         onChange={handleInput}
         onKeyDown={onKeyDown}
-        placeholder={puterReady ? 'Type a message\u2026' : 'Loading Puter\u2026'}
+        placeholder={placeholder}
         disabled={!puterReady}
       />
       <div className="composer-actions">

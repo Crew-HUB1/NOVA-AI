@@ -14,6 +14,10 @@ export default function SettingsDrawer({
   onStreamModeChange,
   darkMode,
   onDarkModeChange,
+  signedIn,
+  user,
+  onSignOut,
+  onSignIn,
   onExport,
   onClearChat,
   messagesCount,
@@ -23,6 +27,8 @@ export default function SettingsDrawer({
   const filteredModels = models.filter((id) =>
     id.toLowerCase().includes(modelSearch.toLowerCase())
   )
+
+  const displayName = user?.username || user?.uuid || 'User'
 
   return (
     <>
@@ -38,6 +44,29 @@ export default function SettingsDrawer({
           </button>
         </div>
         <div className="drawer-body">
+          <div className="setting-group">
+            <div className="user-info-card">
+              <div className="user-info-avatar">{displayName[0].toUpperCase()}</div>
+              <div className="user-info-body">
+                <span className="user-info-name">{displayName}</span>
+                <span className="user-info-status">{signedIn ? 'Signed in' : 'Signed out'}</span>
+              </div>
+              {signedIn ? (
+                <button className="user-info-signout" onClick={onSignOut} title="Sign out">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                </button>
+              ) : (
+                <button className="user-info-signin" onClick={onSignIn}>
+                  Sign in
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className="setting-group">
             <span className="setting-label">Model</span>
             <span className="setting-description">Search among 500+ models</span>

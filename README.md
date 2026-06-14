@@ -58,6 +58,7 @@ One `<script>` tag gives you access to **500+ AI models** — OpenAI, Anthropic,
 | 🆕 | **New Chat** | Start fresh conversations without losing history |
 | 📜 | **Scroll-to-Bottom** | Floating button appears when scrolled up |
 | 🌗 | **Dark / Light Theme** | Toggle with persisted preference |
+| 🔐 | **Puter Auth** | Sign in/out with Puter account, user avatar in header |
 | 📱 | **Responsive** | Works on desktop & mobile |
 
 <div align="center">
@@ -177,7 +178,7 @@ for await (const part of resp) {
 - [x] Message timestamps & avatars
 - [x] New chat & conversation management
 - [x] Glassmorphism UI with animations
-- [ ] Header sign-in button (login before first message)
+- [x] Header sign-in button with Puter auth (sign in/out, user avatar)
 - [ ] Image input (vision models)
 - [ ] Multiple conversation threads
 

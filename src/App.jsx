@@ -79,6 +79,52 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
 
+  // Auth
+  const [user, setUser] = useState(null)
+  const [signedIn, setSignedIn] = useState(false)
+
+  // Check auth state when Puter is ready
+  useEffect(() => {
+    if (!puterReady) return
+    const check = async () => {
+      try {
+        const isSigned = await window.puter.auth.isSignedIn()
+        setSignedIn(isSigned)
+        if (isSigned) {
+          const userData = await window.puter.auth.getUser()
+          setUser(userData)
+        }
+      } catch {
+        setSignedIn(false)
+        setUser(null)
+      }
+    }
+    check()
+  }, [puterReady])
+
+  async function handleSignIn() {
+    try {
+      const result = await window.puter.auth.signIn()
+      if (result?.success) {
+        setSignedIn(true)
+        const userData = await window.puter.auth.getUser()
+        setUser(userData)
+      }
+    } catch (err) {
+      console.error('Sign in failed:', err)
+    }
+  }
+
+  async function handleSignOut() {
+    try {
+      await window.puter.auth.signOut()
+      setSignedIn(false)
+      setUser(null)
+    } catch (err) {
+      console.error('Sign out failed:', err)
+    }
+  }
+
   // Conversation management
   const [conversations, setConversations] = useState(() => {
     const saved = loadConversations()
@@ -106,11 +152,9 @@ export default function App() {
   const cancelRef = useRef(null)
   const editIdxRef = useRef(-1)
 
-  // Sync activeConversation ref
   const activeRef = useRef(activeConversation)
   activeRef.current = activeConversation
 
-  // Sync activeId when first conversation is created
   useEffect(() => {
     if (!activeId && conversations.length > 0) {
       setActiveId(conversations[0].id)
@@ -125,12 +169,10 @@ export default function App() {
     saveSettings({ model, streamMode, darkMode, systemPrompt, temperature })
   }, [model, streamMode, darkMode, systemPrompt, temperature])
 
-  // Persist conversations on change
   useEffect(() => {
     persistConversations(conversations)
   }, [conversations])
 
-  // Persist active ID
   useEffect(() => {
     saveActiveId(activeId)
   }, [activeId])
@@ -199,7 +241,6 @@ export default function App() {
   }
 
   function syncMessagesToConversation() {
-    // forces a save of current messages - called when switching
     updateCurrentMessages((msgs) => msgs)
   }
 
@@ -426,6 +467,10 @@ export default function App() {
       <Header
         darkMode={darkMode}
         activeName={activeName}
+        signedIn={signedIn}
+        user={user}
+        onSignIn={handleSignIn}
+        onSignOut={handleSignOut}
         onToggleDark={() => setDarkMode((d) => !d)}
         onOpenSettings={() => setSettingsOpen(true)}
         onOpenHistory={() => setHistoryOpen((o) => !o)}
@@ -443,6 +488,7 @@ export default function App() {
         input={input}
         busy={busy}
         puterReady={puterReady}
+        signedIn={signedIn}
         onInput={setInput}
         onSend={send}
         onStop={stopGeneration}
@@ -470,6 +516,10 @@ export default function App() {
         onStreamModeChange={setStreamMode}
         darkMode={darkMode}
         onDarkModeChange={setDarkMode}
+        signedIn={signedIn}
+        user={user}
+        onSignOut={handleSignOut}
+        onSignIn={handleSignIn}
         onExport={() => downloadChat(messages)}
         onClearChat={clearChat}
         messagesCount={messages.length}
