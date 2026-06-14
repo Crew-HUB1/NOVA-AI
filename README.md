@@ -48,12 +48,16 @@ One `<script>` tag gives you access to **500+ AI models** — OpenAI, Anthropic,
 
 | | Feature | Description |
 |:--:|:--|:--|
-| 🤖 | **500+ Models** | Auto-loaded dropdown from `puter.ai.listModels()` |
+| 🤖 | **500+ Models** | Auto-loaded dropdown with search from `puter.ai.listModels()` |
 | 🌊 | **Live Streaming** | Tokens stream in real time — toggle on/off |
 | 🧠 | **Multi-turn Memory** | Full conversation context sent each turn |
 | 🎯 | **Haiku by Default** | Smart-picks the best Claude Haiku model on load |
-| 🎨 | **Clean UI** | Light minimal design, ChatGPT-style pill input |
+| 🎨 | **Glassmorphism UI** | Frosted glass composer, gradient accents, smooth animations |
 | 🔑 | **No API Key** | Powered entirely by Puter.js |
+| 💾 | **Chat Persistence** | Messages survive page refresh via localStorage |
+| 🆕 | **New Chat** | Start fresh conversations without losing history |
+| 📜 | **Scroll-to-Bottom** | Floating button appears when scrolled up |
+| 🌗 | **Dark / Light Theme** | Toggle with persisted preference |
 | 📱 | **Responsive** | Works on desktop & mobile |
 
 <div align="center">
@@ -70,10 +74,11 @@ One `<script>` tag gives you access to **500+ AI models** — OpenAI, Anthropic,
 
 </div>
 
-- **React 18** — UI
+- **React 18** — UI with modular component architecture
 - **Vite 5** — dev server + build
 - **Puter.js v2** — AI, auth, billing (CDN)
-- **Vanilla CSS** — light minimal theme, fully isolated
+- **Vanilla CSS** — design system with glassmorphism, gradients, animations
+- **LocalStorage** — chat history & settings persistence
 
 ---
 
@@ -123,14 +128,25 @@ On the first message, Puter shows a **one-time login popup** (free account) to a
 
 ```
 Puter/
-├── index.html          # Vite entry + Puter.js <script>
-├── vite.config.js      # Vite + React config
-├── postcss.config.js   # CSS isolation
+├── index.html                # Vite entry + Puter.js <script>
+├── vite.config.js            # Vite + React config
+├── postcss.config.js         # CSS isolation
 ├── package.json
 └── src/
-    ├── main.jsx        # React mount
-    ├── App.jsx         # chat + model dropdown + streaming
-    └── index.css       # light minimal theme
+    ├── main.jsx              # React mount
+    ├── App.jsx               # State management, AI integration, keyboard shortcuts
+    ├── utils.js              # formatTime, parseThinking, downloadChat helpers
+    ├── index.css             # Full design system (themes, glassmorphism, animations)
+    └── components/
+        ├── Header.jsx               # Brand, new chat, theme toggle, settings
+        ├── ChatArea.jsx             # Scrollable message list with auto-scroll
+        ├── Message.jsx              # Individual message bubble (user, AI, error, actions)
+        ├── Composer.jsx             # Textarea input with send/stop buttons
+        ├── SettingsDrawer.jsx       # Slide-in panel for all settings
+        ├── WelcomeScreen.jsx        # Animated landing with prompt suggestions
+        ├── ScrollToBottom.jsx       # Floating scroll-to-bottom button
+        ├── AiMessageWithThinking.jsx# Collapsible <thinking> tag renderer
+        └── MarkdownRenderer.jsx     # Syntax-highlighted code blocks + markdown
 ```
 
 ---
@@ -155,12 +171,15 @@ for await (const part of resp) {
 
 ## 🗺️ Roadmap
 
-- [ ] Markdown + code-block rendering of replies
+- [x] Markdown + code-block rendering of replies
+- [x] Light / dark theme toggle
+- [x] Persist chat history (localStorage)
+- [x] Message timestamps & avatars
+- [x] New chat & conversation management
+- [x] Glassmorphism UI with animations
 - [ ] Header sign-in button (login before first message)
-- [ ] Light / dark theme toggle
-- [ ] Persist chat history (localStorage)
-- [ ] Message timestamps & avatars
 - [ ] Image input (vision models)
+- [ ] Multiple conversation threads
 
 ---
 
